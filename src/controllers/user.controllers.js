@@ -99,7 +99,7 @@ const registerUser = asyncHandler(async (req,res)=>{
 
     // return res
     return res.status(201).json(
-        new ApiResponse(200,createdUser,"User egisered successfully")
+        new ApiResponse(200,createdUser,"User regisered successfully")
     )
 
 })
@@ -114,7 +114,7 @@ const loginUser = asyncHandler(async(req,res)=>{
         // req.body ->data
          // username or email based login
      const {username,email,password} = req.body
-     if(!username || !email){
+     if(!(username || email)){
         throw new ApiError(400,"Username or email required")
      }
       // find the user
@@ -166,7 +166,10 @@ const logoutUser = asyncHandler(async(req,res) => {
                     refreshToken: undefined
                 }
             },
-            new:true
+            {
+                new: true
+            }
+            
         )
 
         const options = {

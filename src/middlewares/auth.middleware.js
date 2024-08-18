@@ -1,9 +1,9 @@
 // this midleware will varify weather the user is there or not
 
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asynchandler";
-import { JsonWebTokenError } from "jsonwebtoken";
-import { User } from "../models/user.model";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asynchandler.js";
+import  Jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
 
 export const verifyJWT = asyncHandler(async(req,_,next) => {
     try {
@@ -13,7 +13,7 @@ export const verifyJWT = asyncHandler(async(req,_,next) => {
         if(!token){
             throw new ApiError(401,"Unauthorized Request")
         }
-        const decodedToken = JsonWebTokenError.verify(token , process.env.ACCESS_TOKEN_SECRET)
+        const decodedToken = Jwt.verify(token , process.env.ACCESS_TOKEN_SECRET)
     
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
     
@@ -23,7 +23,7 @@ export const verifyJWT = asyncHandler(async(req,_,next) => {
         req.user = user;
         next()
     } catch (error) {
-        throw new ApiError(401,error?.message || "Invalid Access Token")
+        throw new ApiError(401, "Invalid Access Token")
     }
 
 }) 
